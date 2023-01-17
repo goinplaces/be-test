@@ -1,11 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
-using VacationRental.Api.Models;
+using VacationRental.Service.Models;
 using Xunit;
 
-namespace VacationRental.Api.Tests
+namespace VacationRental.Tests
 {
     [Collection("Integration")]
     public class PostRentalTests
@@ -18,11 +16,12 @@ namespace VacationRental.Api.Tests
         }
 
         [Fact]
-        public async Task GivenCompleteRequest_WhenPostRental_ThenAGetReturnsTheCreatedRental()
+        public async Task WhenPostRental_ThenGetReturnsTheCreatedRental()
         {
-            var request = new RentalBindingModel
+            var request = new RentalModel
             {
-                Units = 25
+                Units = 25,
+                PreparationTimeInDays = 2
             };
 
             ResourceIdViewModel postResult;
@@ -38,6 +37,16 @@ namespace VacationRental.Api.Tests
 
                 var getResult = await getResponse.Content.ReadAsAsync<RentalViewModel>();
                 Assert.Equal(request.Units, getResult.Units);
+            }
+        }
+
+        [Fact]
+        public async Task WithoutProperRentalId_GetReturnsTheCreatedRental()
+        {
+      
+            using (var getResponse = await _client.GetAsync($"/api/v1/rentals/99"))
+            {
+                Assert.False(getResponse.IsSuccessStatusCode);
             }
         }
     }
