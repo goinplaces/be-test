@@ -6,7 +6,7 @@
 *.user
 *.sln.docstates
 #vs 2015
-.vs/
+.vscode/
 
 #Umbraco
 obj
